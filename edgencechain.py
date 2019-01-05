@@ -281,10 +281,10 @@ side_branches: Iterable[Iterable[Block]] = []
 chain_lock = threading.RLock()
 
 
-def with_lock(lock):
+def with_lock(lock):  #装饰器本身带参数的情况，使用时用@with_lock(chain_lock)
     def dec(func):
         @wraps(func)
-        def wrapper(*args, **kwargs):
+        def wrapper(*args, **kwargs): #参数定义是(*args, **kw)，表示可以接受任意参数的调用
             with lock:
                 return func(*args, **kwargs)
         return wrapper
