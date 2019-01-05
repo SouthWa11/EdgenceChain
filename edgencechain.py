@@ -485,7 +485,7 @@ CHAIN_PATH = os.environ.get('TC_CHAIN_PATH', 'chain.dat') #区块链数据的存
 
 @with_lock(chain_lock)
 def save_to_disk():
-    with open(CHAIN_PATH, "wb") as f:
+    with open(CHAIN_PATH, "wb") as f:  #打开文件的参数是wb，原有内容会被删除
         logger.info(f"saving chain with {len(active_chain)} blocks")
         f.write(encode_socket_data(list(active_chain)))
 
@@ -670,7 +670,7 @@ def mine_forever():
 
         if block:
             connect_block(block)
-            save_to_disk()
+            save_to_disk()   #每次挖到一个新块，则重新保存所有区块到block.dat
 
 
 # Validation
