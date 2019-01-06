@@ -150,7 +150,7 @@ class TxIn(NamedTuple):
 
 class TxOut(NamedTuple): # 目前只用了to_address来锁定，因此只能实现P2PK交易
     """Outputs from a Transaction."""
-    # The number of Belushis this awards.
+    # The number of LET this awards.
     value: int
 
     # The public key of the owner of this Txn.
@@ -632,7 +632,7 @@ def get_block_subsidy() -> int: #返回当前区块奖励数
     if halvings >= 64: #如果减半次数>=64，新生区块没有奖励
         return 0
 
-    return 50 * Params.BELUSHIS_PER_COIN // (2 ** halvings)  #当前区块奖励
+    return 50 * Params.LET_PER_COIN // (2 ** halvings)  #当前区块奖励
 
 
 # Signal to communicate to the mining thread that it should stop mining because
