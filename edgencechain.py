@@ -976,20 +976,20 @@ class InvMsg(NamedTuple):  # Convey blocks to a peer who is doing initial sync
 
         new_blocks = [b for b in self.blocks if not locate_block(b.id)[0]]
 
-        if not new_blocks:
+        if not new_blocks: #如果不能收到新区块，说明已经同步到最新区块
             logger.info('[p2p] initial block download complete')
             ibd_done.set()
             return
 
-        for block in new_blocks:
+        for block in new_blocks: #添加收到的多个区块
             connect_block(block)
 
-        new_tip_id = active_chain[-1].id
+        new_tip_id = active_chain[-1].id  
         logger.info(f'[p2p] continuing initial block download at {new_tip_id}')
 
         with chain_lock:
             # "Recursive" call to continue the initial block sync.
-            send_to_peer(GetBlocksMsg(new_tip_id))   # 再次调用同步区块函数，直到同步到最新区块
+            send_to_peer(GetBlocksMsg(new_tip_id))   # 再次调用同步区块函数，从new_tip_id开始，直到同步到最新区块
 
 
 class GetUTXOsMsg(NamedTuple):  # List all UTXOs
