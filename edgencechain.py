@@ -1074,10 +1074,10 @@ class TCPHandler(socketserver.BaseRequestHandler):
         if hasattr(data, 'handle') and isinstance(data.handle, Callable):
             logger.info(f'received msg {data} from peer {peer_hostname}')
             data.handle(self.request, peer_hostname)
-        elif isinstance(data, Transaction):  #收到交易
+        elif isinstance(data, Transaction):  #收到一个交易实例
             logger.info(f"received txn {data.id} from peer {peer_hostname}")
             add_txn_to_mempool(data)
-        elif isinstance(data, Block): #收到区块
+        elif isinstance(data, Block): #收到一个区块实例
             logger.info(f"received block {data.id} from peer {peer_hostname}")
             connect_block(data)
 
@@ -1224,7 +1224,7 @@ def main():
         logger.info(
             f'start initial block download from {len(peer_hostnames)} peers')
         # send_to_peer(data, peer=None): #向指定的peer或者随机指定的一个peer发送data数据                                                         
-        send_to_peer(GetBlocksMsg(active_chain[-1].id))   
+        send_to_peer(GetBlocksMsg(active_chain[-1].id))   #把初始化完毕的实例GetBlocksMsg(active_chain[-1].id)，作为data参数传送出去
         
         # ibd （initial block download）的缩写，
            #是threading.Event()类型，调用该方法的线程会被阻塞，如果设置了timeout参数，超时后，线程会停止阻塞继续执行；                                                         
