@@ -487,7 +487,7 @@ CHAIN_PATH = os.environ.get('TC_CHAIN_PATH', 'chain.dat') #区块链数据的存
 def save_to_disk():
     with open(CHAIN_PATH, "wb") as f:  #打开文件的参数是wb，原有内容会被删除
         logger.info(f"saving chain with {len(active_chain)} blocks")
-        f.write(encode_socket_data(list(active_chain)))
+        f.write(encode_socket_data(list(active_chain)))   #把主链的区块数据一次传输并写进文件，前面四个字节是数据长度，其后是数据
 
         
 @with_lock(chain_lock)
@@ -496,7 +496,7 @@ def load_from_disk():
         return
     try:
         with open(CHAIN_PATH, "rb") as f:
-            msg_len = int(binascii.hexlify(f.read(4) or b'\x00'), 16) # 前面四个字节是二进制的总字节数，其后是这么多个字节数的内容，这是socket的形式
+            msg_len = int(binascii.hexlify(f.read(4) or b'\x00'), 16) # 前面四个字节是二进制的总字节数，其后是这么多个字节数的内容
             new_blocks = deserialize(f.read(msg_len))  #一次读取完毕，并反序列化
             logger.info(f"loading chain from disk with {len(new_blocks)} blocks")
             for block in new_blocks:  #把每一个区块接上去
@@ -1055,7 +1055,7 @@ def int_to_8bytes(a: int) -> bytes: return binascii.unhexlify(f"{a:0{8}x}")
 def encode_socket_data(data: object) -> bytes:
     """Our protocol is: first 4 bytes signify msg length."""
     to_send = serialize(data).encode()
-    return int_to_8bytes(len(to_send)) + to_send
+    return int_to_8bytes(len(to_send)) + to_send   #前四个字节是二进制数据，表示要传输的数据to_send的长度，其后才是to_send
 
 
 class ThreadedTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
