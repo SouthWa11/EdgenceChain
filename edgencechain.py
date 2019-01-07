@@ -1227,7 +1227,8 @@ def main():
         send_to_peer(GetBlocksMsg(active_chain[-1].id))   #把初始化完毕的实例GetBlocksMsg(active_chain[-1].id)，作为data参数传送出去
         
         # ibd （initial block download）的缩写，
-           #是threading.Event()类型，调用该方法的线程会被阻塞，如果设置了timeout参数，超时后，线程会停止阻塞继续执行；                                                         
+           #是threading.Event()类型，调用该方法的线程会被阻塞，通过wait(timeout)设置timeout参数，两个途径解除阻塞：
+                                               #1.从wait函数执行，到超出时长timeout后；2..set()函数被执行                                                         
         ibd_done.wait(60.)  # Wait a maximum of 60 seconds for IBD to complete. 
     start_worker(mine_forever)  #启动挖矿线程
     [w.join() for w in workers]
