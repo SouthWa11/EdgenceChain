@@ -1007,6 +1007,8 @@ class GetActiveChainMsg(NamedTuple):  # Get the active chain in its entirety.
         sock.sendall(encode_socket_data(list(active_chain)))
 
 
+        
+#AddPeerMsg这个类应该没有意义。因为全节点增加peer_hostnames的操作应该是主动触发的（e.g.,TCPHandler类里），而非如此被动的形式。        
 class AddPeerMsg(NamedTuple): 
     peer_hostname: str
 
