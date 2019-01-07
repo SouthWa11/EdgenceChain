@@ -431,7 +431,7 @@ def reorg_if_necessary() -> bool:
 def try_reorg(branch, branch_idx, fork_idx) -> bool:
     # Use the global keyword so that we can actually swap out the reference
     # in case of a reorg.
-    global active_chain
+    global active_chain  #对全局变量active_chain和side_branches进行了赋值操作，即指针发生改变，因此需要声明，不然会认为是局部变量
     global side_branches
 
     fork_block = active_chain[fork_idx]
@@ -1011,7 +1011,7 @@ class AddPeerMsg(NamedTuple):
     peer_hostname: str
 
     def handle(self, sock, peer_hostname):
-        peer_hostnames.add(self.peer_hostname)
+        peer_hostnames.add(self.peer_hostname)  #全局变量peer_hostnames添加元素操作，指针未变，因此不需声明全局变量
 
 
 def read_all_from_socket(req) -> object:
@@ -1046,8 +1046,10 @@ def send_to_peer(data, peer=None):
             return
 
     logger.info(f"[p2p] removing dead peer {peer}")
+    
+    # 对全局变量进行赋值，指针变化，因此该函数需要对peer_hostnames进行声明
     peer_hostnames = {x for x in peer_hostnames if x != peer} #超过三次不能建立TCP连接，则剔除该节点
-
+    
 
 def int_to_8bytes(a: int) -> bytes: return binascii.unhexlify(f"{a:0{8}x}")
 
@@ -1067,7 +1069,7 @@ class TCPHandler(socketserver.BaseRequestHandler):
     def handle(self):
         data = read_all_from_socket(self.request)
         peer_hostname = self.request.getpeername()[0]  
-        peer_hostnames.add(peer_hostname)  #添加新节点
+        peer_hostnames.add(peer_hostname)  #添加新节点；添加元素不改变指针，无需声明全局变量
 
         if hasattr(data, 'handle') and isinstance(data.handle, Callable):
             logger.info(f'received msg {data} from peer {peer_hostname}')
