@@ -815,7 +815,7 @@ def validate_block(block: Block) -> Block:
 # ----------------------------------------------------------------------------
 
 # Set of yet-unmined transactions.
-mempool: Dict[str, Transaction] = {}
+mempool: Dict[str, Transaction] = {}  #全局变量mempool，这是代码里唯一的赋值操作，因此代码中无一处声明其为全局变量。
 
 # Set of orphaned (i.e. has inputs referencing yet non-existent UTXOs)
 # transactions.
