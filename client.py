@@ -14,6 +14,11 @@ Options:
   -p, --port PORT      Port node is listening on (default: 9999)
 
 """
+
+# options参数用-h而非--help，其它三个参数也一样
+# 尖括号括起来的是必选参数，如<addr>表示此处填写目的地址，<val>表示金额，，<txid>表示交易ID
+# --raw表示直接显示金额的原始数字，--csv表示将采用csv格式将结果打印出来。这两个可选参数不需关注。
+
 import logging
 import os
 import socket
