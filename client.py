@@ -31,7 +31,7 @@ logger = logging.getLogger(__name__)
 
 def main(args):
     args['signing_key'], args['verifying_key'], args['my_addr'] = (
-        t.init_wallet(args.get('--wallet')))
+        t.init_wallet(args.get('--wallet'))) #t.init_wallet()有默认钱包wallet.dat
 
     if args['--port']:
         send_msg.port = args['--port']
@@ -64,13 +64,13 @@ def txn_status(args):
     as_csv = args['--csv']
     mempool = send_msg(t.GetMempoolMsg())
 
-    if txid in mempool:
+    if txid in mempool: #如果txid在mempool里，说明该交易尚未打包确认
         print(f'{txid}:in_mempool,,' if as_csv else 'Found in mempool')
         return
 
     chain = send_msg(t.GetActiveChainMsg())
 
-    for tx, block, height in t.txn_iterator(chain):
+    for tx, block, height in t.txn_iterator(chain): #在主链中查找该交易
         if tx.id == txid:
             print(
                 f'{txid}:mined,{block.id},{height}' if as_csv else
@@ -80,16 +80,16 @@ def txn_status(args):
     print(f'{txid}:not_found,,' if as_csv else 'Not found')
 
 
-def send_value(args: dict):
+def send_value(args: dict):  #发送交易
     """
     Send value to some address.
     """
     val, to_addr, sk = int(args['<val>']), args['<addr>'], args['signing_key']
     selected = set()
     my_coins = list(sorted(
-        find_utxos_for_address(args), key=lambda i: (i.value, i.height)))
+        find_utxos_for_address(args), key=lambda i: (i.value, i.height)))  #按utxo的value和height两个属性排序
 
-    for coin in my_coins:
+    for coin in my_coins:   #相当于贪心算法选择utxo集合
         selected.add(coin)
         if sum(i.value for i in selected) > val:
             break
@@ -97,7 +97,7 @@ def send_value(args: dict):
     txout = t.TxOut(value=val, to_address=to_addr)
 
     txn = t.Transaction(
-        txins=[make_txin(sk, coin.outpoint, txout) for coin in selected],
+        txins=[make_txin(sk, coin.outpoint, txout) for coin in selected], #.outpoint是utxo的一个属性函数，返回OutPoint(self.txid, self.txout_idx)
         txouts=[txout])
 
     logger.info(f'built txn {txn}')
@@ -105,7 +105,7 @@ def send_value(args: dict):
     send_msg(txn)
 
 
-def send_msg(data: bytes, node_hostname=None, port=None):
+def send_msg(data: bytes, node_hostname=None, port=None):  #可以指定对方的IP和端口
     node_hostname = getattr(send_msg, 'node_hostname', 'localhost')
     port = getattr(send_msg, 'port', 9999)
 
@@ -116,8 +116,8 @@ def send_msg(data: bytes, node_hostname=None, port=None):
 
 
 def find_utxos_for_address(args: dict):
-    utxo_set = dict(send_msg(t.GetUTXOsMsg()))
-    return [u for u in utxo_set.values() if u.to_address == args['my_addr']]
+    utxo_set = dict(send_msg(t.GetUTXOsMsg())) #让全节点运行GetUTXOsMsg函数，返回utxo_set
+    return [u for u in utxo_set.values() if u.to_address == args['my_addr']] #从参数里解析出to_address，并查出对应的utxo
 
 
 def make_txin(signing_key, outpoint: t.OutPoint, txout: t.TxOut) -> t.TxIn:
