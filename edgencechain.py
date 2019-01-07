@@ -1068,7 +1068,7 @@ class TCPHandler(socketserver.BaseRequestHandler):
 
     def handle(self):
         data = read_all_from_socket(self.request)  #右侧函数read_all_from_socket负责读取socket数据并对其反序列化，返回一个实例
-        peer_hostname = self.request.getpeername()[0]  
+        peer_hostname = self.request.getpeername()[0]   # request.getpeername()返回一个tuple('127.0.0.1', 51602)，包含IP和PORT
         peer_hostnames.add(peer_hostname)  #添加新节点；添加元素不改变指针，无需声明全局变量
 
         if hasattr(data, 'handle') and isinstance(data.handle, Callable):
