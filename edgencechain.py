@@ -989,7 +989,7 @@ class InvMsg(NamedTuple):  # Convey blocks to a peer who is doing initial sync
 
         with chain_lock:
             # "Recursive" call to continue the initial block sync.
-            send_to_peer(GetBlocksMsg(new_tip_id))
+            send_to_peer(GetBlocksMsg(new_tip_id))   # 再次调用同步区块函数，直到同步到最新区块
 
 
 class GetUTXOsMsg(NamedTuple):  # List all UTXOs
