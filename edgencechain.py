@@ -1223,7 +1223,8 @@ def main():
     if peer_hostnames:
         logger.info(
             f'start initial block download from {len(peer_hostnames)} peers')
-        send_to_peer(GetBlocksMsg(active_chain[-1].id))
+        # send_to_peer(data, peer=None): #向指定的peer或者随机指定的一个peer发送data数据                                                         
+        send_to_peer(GetBlocksMsg(active_chain[-1].id))   
         
         # ibd （initial block download）的缩写，
            #是threading.Event()类型，调用该方法的线程会被阻塞，如果设置了timeout参数，超时后，线程会停止阻塞继续执行；                                                         
