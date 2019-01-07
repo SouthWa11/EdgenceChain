@@ -489,16 +489,17 @@ def save_to_disk():
         logger.info(f"saving chain with {len(active_chain)} blocks")
         f.write(encode_socket_data(list(active_chain)))
 
+        
 @with_lock(chain_lock)
 def load_from_disk():
     if not os.path.isfile(CHAIN_PATH):
         return
     try:
         with open(CHAIN_PATH, "rb") as f:
-            msg_len = int(binascii.hexlify(f.read(4) or b'\x00'), 16)
-            new_blocks = deserialize(f.read(msg_len))
+            msg_len = int(binascii.hexlify(f.read(4) or b'\x00'), 16) # 前面四个字节是二进制的总字节数，其后是这么多个字节数的内容，这是socket的形式
+            new_blocks = deserialize(f.read(msg_len))  #一次读取完毕，并反序列化
             logger.info(f"loading chain from disk with {len(new_blocks)} blocks")
-            for block in new_blocks:
+            for block in new_blocks:  #把每一个区块接上去
                 connect_block(block)
     except Exception:
         logger.exception('load chain failed, starting from genesis')
