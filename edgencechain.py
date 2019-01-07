@@ -1027,11 +1027,11 @@ def read_all_from_socket(req) -> object:
     return deserialize(data.decode()) if data else None
 
 
-def send_to_peer(data, peer=None):
+def send_to_peer(data, peer=None): #向指定的peer或者随机指定的一个peer发送data数据
     """Send a message to a (by default) random peer."""
     global peer_hostnames
 
-    peer = peer or random.choice(list(peer_hostnames))  #随机选择一个peer
+    peer = peer or random.choice(list(peer_hostnames))  #发送给指定的peer，或者随机指定一个peer
     tries_left = 3
 
     while tries_left > 0:
