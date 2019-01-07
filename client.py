@@ -35,16 +35,18 @@ logger = logging.getLogger(__name__)
 
 
 def main(args):
+    # args本身是个包含了命令行参数的字典，此处再添加三条关于钱包信息的内容。
     args['signing_key'], args['verifying_key'], args['my_addr'] = (
         t.init_wallet(args.get('--wallet'))) #t.init_wallet()有默认钱包wallet.dat
 
+    #当--port和--node参数在命令行参数里被指定，或者有值，则将函数send_msg的对应内置成员赋值。
     if args['--port']:
         send_msg.port = args['--port']
     if args['--node']:
         send_msg.node_hostname = args['--node']
 
-    if args['balance']:
-        get_balance(args)
+    if args['balance']:  #如果args字典里有balance，则执行get_balance函数
+        get_balance(args) # get_balance以args字典为参数，该函数内部有对args的解析，以获得addr参数。
     elif args['send']:
         send_value(args)
     elif args['status']:
@@ -65,7 +67,7 @@ def txn_status(args):
 
     Prints [status],[containing block_id],[height mined]
     """
-    txid = args['<txid>']
+    txid = args['<txid>']  #获得<txid>位置的参数
     as_csv = args['--csv']
     mempool = send_msg(t.GetMempoolMsg())
 
