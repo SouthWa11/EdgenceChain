@@ -1014,7 +1014,7 @@ class AddPeerMsg(NamedTuple):
         peer_hostnames.add(self.peer_hostname)  #全局变量peer_hostnames添加元素操作，指针未变，因此不需声明全局变量
 
 
-def read_all_from_socket(req) -> object:
+def read_all_from_socket(req) -> object:  #读取socket数据，并将其反序列化
     data = b''
     # Our protocol is: first 4 bytes signify msg length.
     msg_len = int(binascii.hexlify(req.recv(4) or b'\x00'), 16)
@@ -1067,7 +1067,7 @@ class ThreadedTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
 class TCPHandler(socketserver.BaseRequestHandler):
 
     def handle(self):
-        data = read_all_from_socket(self.request)
+        data = read_all_from_socket(self.request)  #右侧函数read_all_from_socket负责读取socket数据并对其反序列化，返回一个实例
         peer_hostname = self.request.getpeername()[0]  
         peer_hostnames.add(peer_hostname)  #添加新节点；添加元素不改变指针，无需声明全局变量
 
