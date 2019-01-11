@@ -994,7 +994,8 @@ class InvMsg(NamedTuple):  # Convey blocks to a peer who is doing initial sync
 
 class GetUTXOsMsg(NamedTuple):  # List all UTXOs
     def handle(self, sock, peer_hostname):
-        sock.sendall(encode_socket_data(list(utxo_set.items())))
+       #utxo_set的元素是Mapping[OutPoint, UnspentTxOut]类型，则list(utxo_set.items())的每个元素是包含键和值的tuple类型
+        sock.sendall(encode_socket_data(list(utxo_set.items()))) 
 
 
 class GetMempoolMsg(NamedTuple):  # List the mempool
