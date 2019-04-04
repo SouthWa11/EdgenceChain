@@ -35,6 +35,7 @@ pip install -r requirements.txt
 ### 3.节点端口设置
 1.当前结点端口的设置是在params/Params.py的PORT_CURRENT字段。 举例：将该节点的端口设置为9997： 
 *PORT_CURRENT = int(9997)*
+
 2.如果该节点要与已经在运行的节点连接，则必须配置该参数，该参数位于params/Params.py的PEERS字段，节点由一个Tuple类型的(ip,port)表示其ip和port信息。可以配置多个这样的节点。 
 *PEERS: Iterable[Tuple] = list([('127.0.0.1', 9997)])*
 
