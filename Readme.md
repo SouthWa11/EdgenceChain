@@ -15,7 +15,7 @@ expense of advanced functionality, speed, and any real usefulness.
 ```
 tar -xzf Python-3.6.7.tgz
 cd Python-3.6.7
-./configure --enable-optimizations  --prefix=/usr/local/python3.7/
+./configure --enable-optimizations  --prefix=/usr/local/python3.6.7/
 #prefix参数配置安装路径
 make 
 sudo make install
